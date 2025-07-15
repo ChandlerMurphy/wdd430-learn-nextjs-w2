@@ -1,7 +1,22 @@
-// /app/api/auth/[...nextauth]/route.ts
 import NextAuth from "next-auth";
-import { authConfig } from "../../../../auth.config";
+import GoogleProvider from "next-auth/providers/google";
 
-const handler = NextAuth(authConfig);
+const handler = NextAuth({
+  providers: [
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID || "",
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
+    }),
+  ],
+  pages: {
+    signIn: "/login",
+  },
+  callbacks: {
+    async session({ session, token }) {
+      // Optionally add token info to session here
+      return session;
+    },
+  },
+});
 
 export { handler as GET, handler as POST };
